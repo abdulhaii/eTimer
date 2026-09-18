@@ -1,3 +1,4 @@
+```javascript
 import { initializeApp } from
     "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
 
@@ -11,7 +12,7 @@ import {
 
 
 // ======================================
-// Firebase configuration
+// Firebase Configuration
 // ======================================
 
 const firebaseConfig = {
@@ -38,7 +39,7 @@ const firebaseConfig = {
 };
 
 // ======================================
-// تشغيل Firebase
+// Firebase
 // ======================================
 
 const app = initializeApp(firebaseConfig);
@@ -52,51 +53,29 @@ const ledRef = ref(db, "led");
 // عناصر الصفحة
 // ======================================
 
-const yearsInput =
-    document.getElementById("years");
+const yearsInput = document.getElementById("years");
+const monthsInput = document.getElementById("months");
+const daysInput = document.getElementById("days");
+const hoursInput = document.getElementById("hours");
+const minutesInput = document.getElementById("minutes");
 
-const monthsInput =
-    document.getElementById("months");
+const confirmBtn = document.getElementById("confirmBtn");
+const resetBtn = document.getElementById("resetBtn");
+const cancelBtn = document.getElementById("cancelBtn");
 
-const daysInput =
-    document.getElementById("days");
-
-const hoursInput =
-    document.getElementById("hours");
-
-const minutesInput =
-    document.getElementById("minutes");
-
-
-const confirmBtn =
-    document.getElementById("confirmBtn");
-
-const resetBtn =
-    document.getElementById("resetBtn");
-
-const cancelBtn =
-    document.getElementById("cancelBtn");
-
-
-const ledStatus =
-    document.getElementById("ledStatus");
-
-const remaining =
-    document.getElementById("remaining");
+const ledStatus = document.getElementById("ledStatus");
+const remaining = document.getElementById("remaining");
 
 
 // ======================================
-// متغير عداد الوقت
+// متغير العداد
 // ======================================
-
-// نخزن هنا setInterval حتى نستطيع إيقافه
-// عند الإلغاء أو انتهاء المؤقت.
 
 let countdownInterval = null;
 
 
 // ======================================
-// الحصول على رقم صحيح من صندوق الإدخال
+// تحويل الإدخال إلى رقم
 // ======================================
 
 function getNumber(input) {
@@ -104,11 +83,25 @@ function getNumber(input) {
     const value = Number(input.value);
 
     if (!Number.isFinite(value) || value < 0) {
-
         return 0;
     }
 
     return Math.floor(value);
+}
+
+
+// ======================================
+// إيقاف العداد
+// ======================================
+
+function stopCountdown() {
+
+    if (countdownInterval !== null) {
+
+        clearInterval(countdownInterval);
+
+        countdownInterval = null;
+    }
 }
 
 
@@ -118,25 +111,12 @@ function getNumber(input) {
 
 confirmBtn.addEventListener("click", async () => {
 
-    const years =
-        getNumber(yearsInput);
+    const years = getNumber(yearsInput);
+    const months = getNumber(monthsInput);
+    const days = getNumber(daysInput);
+    const hours = getNumber(hoursInput);
+    const minutes = getNumber(minutesInput);
 
-    const months =
-        getNumber(monthsInput);
-
-    const days =
-        getNumber(daysInput);
-
-    const hours =
-        getNumber(hoursInput);
-
-    const minutes =
-        getNumber(minutesInput);
-
-
-    // ==================================
-    // تحويل المدة كلها إلى دقائق
-    // ==================================
 
     // السنة = 365 يوم
     // الشهر = 30 يوم
@@ -149,9 +129,8 @@ confirmBtn.addEventListener("click", async () => {
         minutes;
 
 
-    // ==================================
-    // التأكد من وجود مدة
-    // ==================================
+    console.log("المدة بالدقائق:", totalMinutes);
+
 
     if (totalMinutes <= 0) {
 
@@ -161,54 +140,35 @@ confirmBtn.addEventListener("click", async () => {
     }
 
 
-    // ==================================
-    // حساب وقت البداية والنهاية
-    // ==================================
-
-    const now = Date.now();
+    const startTime = Date.now();
 
     const endTime =
-        now + (totalMinutes * 60 * 1000);
+        startTime + (totalMinutes * 60 * 1000);
 
-
-    // رقم فريد للأمر
-
-    const commandId = Date.now();
-
-
-    // ==================================
-    // إرسال الأمر إلى Firebase
-    // ==================================
 
     try {
+
+        console.log("إرسال البيانات إلى Firebase...");
 
         await set(ledRef, {
 
             active: true,
 
-            startTime: now,
+            startTime: startTime,
 
             endTime: endTime,
 
-            commandId: commandId
+            commandId: Date.now()
 
         });
 
 
-        console.log(
-            "تم تشغيل المؤقت:",
-            totalMinutes,
-            "دقيقة"
-        );
+        console.log("تم إرسال البيانات بنجاح");
 
 
     } catch (error) {
 
-        console.error(
-            "Firebase Error:",
-            error
-        );
-
+        console.error("Firebase Error:", error);
 
         alert(
             "حدث خطأ أثناء الاتصال بقاعدة البيانات:\n\n" +
@@ -228,13 +188,9 @@ confirmBtn.addEventListener("click", async () => {
 resetBtn.addEventListener("click", () => {
 
     yearsInput.value = 0;
-
     monthsInput.value = 0;
-
     daysInput.value = 0;
-
     hoursInput.value = 0;
-
     minutesInput.value = 0;
 
 });
@@ -260,19 +216,11 @@ cancelBtn.addEventListener("click", async () => {
 
         });
 
-
-        console.log(
-            "تم إلغاء المؤقت"
-        );
-
+        console.log("تم إلغاء المؤقت");
 
     } catch (error) {
 
-        console.error(
-            "Firebase Error:",
-            error
-        );
-
+        console.error("Firebase Error:", error);
 
         alert(
             "فشل إلغاء المؤقت:\n\n" +
@@ -293,77 +241,46 @@ onValue(ledRef, (snapshot) => {
 
     const data = snapshot.val();
 
+    console.log("Firebase data:", data);
 
-    // ==================================
-    // لا يوجد مؤقت أو المؤقت متوقف
-    // ==================================
+
+    // ----------------------------------
+    // لا يوجد مؤقت
+    // ----------------------------------
 
     if (!data || data.active !== true) {
 
-        ledStatus.textContent =
-            "متوقف";
+        ledStatus.textContent = "متوقف";
 
+        remaining.textContent = "لا يوجد مؤقت";
 
-        remaining.textContent =
-            "لا يوجد مؤقت";
-
-
-        // إيقاف أي عداد يعمل حالياً
-
-        if (countdownInterval !== null) {
-
-            clearInterval(
-                countdownInterval
-            );
-
-            countdownInterval = null;
-        }
-
+        stopCountdown();
 
         return;
     }
 
 
-    // ==================================
+    // ----------------------------------
     // المؤقت يعمل
-    // ==================================
+    // ----------------------------------
 
-    ledStatus.textContent =
-        "يعمل";
+    ledStatus.textContent = "يعمل";
 
-
-    // تشغيل العداد
-
-    updateRemaining(
-        data.endTime
-    );
+    updateRemaining(data.endTime);
 
 });
 
 
 // ======================================
-// تحديث الوقت المتبقي
+// عرض الوقت المتبقي
 // ======================================
 
 function updateRemaining(endTime) {
 
-    // ==================================
     // إيقاف أي عداد قديم
-    // ==================================
 
-    if (countdownInterval !== null) {
+    stopCountdown();
 
-        clearInterval(
-            countdownInterval
-        );
-
-        countdownInterval = null;
-    }
-
-
-    // ==================================
-    // دالة تحديث الوقت
-    // ==================================
 
     function update() {
 
@@ -371,55 +288,27 @@ function updateRemaining(endTime) {
             endTime - Date.now();
 
 
-        // ==================================
-        // انتهى المؤقت
-        // ==================================
+        // ----------------------------------
+        // انتهى الوقت
+        // ----------------------------------
 
         if (remainingMs <= 0) {
 
-            remaining.textContent =
-                "انتهى المؤقت";
+            remaining.textContent = "انتهى المؤقت";
 
-
-            // إيقاف العداد
-
-            if (countdownInterval !== null) {
-
-                clearInterval(
-                    countdownInterval
-                );
-
-                countdownInterval = null;
-            }
-
+            stopCountdown();
 
             return;
         }
 
 
-        // ==================================
-        // تحويل المدة إلى ثواني
-        // ==================================
-
         const totalSeconds =
-            Math.floor(
-                remainingMs / 1000
-            );
+            Math.floor(remainingMs / 1000);
 
-
-        // ==================================
-        // حساب الأيام
-        // ==================================
 
         const days =
-            Math.floor(
-                totalSeconds / 86400
-            );
+            Math.floor(totalSeconds / 86400);
 
-
-        // ==================================
-        // حساب الساعات
-        // ==================================
 
         const hours =
             Math.floor(
@@ -427,27 +316,15 @@ function updateRemaining(endTime) {
             );
 
 
-        // ==================================
-        // حساب الدقائق
-        // ==================================
-
         const minutes =
             Math.floor(
                 (totalSeconds % 3600) / 60
             );
 
 
-        // ==================================
-        // حساب الثواني
-        // ==================================
-
         const seconds =
             totalSeconds % 60;
 
-
-        // ==================================
-        // عرض الوقت
-        // ==================================
 
         remaining.textContent =
             `${days} يوم - ` +
@@ -457,21 +334,14 @@ function updateRemaining(endTime) {
     }
 
 
-    // ==================================
-    // تحديث أول مرة مباشرة
-    // ==================================
+    // تحديث مباشر
 
     update();
 
 
-    // ==================================
     // تحديث كل ثانية
-    // ==================================
 
     countdownInterval =
-        setInterval(
-            update,
-            1000
-        );
+        setInterval(update, 1000);
 }
 ```
