@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>مؤقت LED</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <main class="container">
+
+        <h1>مؤقت LED</h1>
+
+        <div class="timer-box">
+
+            <div class="input-row">
+                <input
+                    id="years"
+                    type="number"
+                    min="0"
+                    inputmode="numeric"
+                    value="0"
+                >
+                <span>سنوات</span>
+            </div>
+
+            <div class="input-row">
+                <input
+                    id="months"
+                    type="number"
+                    min="0"
+                    inputmode="numeric"
+                    value="0"
+                >
+                <span>أشهر</span>
+            </div>
+
+            <div class="input-row">
+                <input
+                    id="days"
+                    type="number"
+                    min="0"
+                    inputmode="numeric"
+                    value="0"
+                >
+                <span>أيام</span>
+            </div>
+
+            <div class="input-row">
+                <input
+                    id="hours"
+                    type="number"
+                    min="0"
+                    inputmode="numeric"
+                    value="0"
+                >
+                <span>ساعات</span>
+            </div>
+
+            <div class="input-row">
+                <input
+                    id="minutes"
+                    type="number"
+                    min="0"
+                    inputmode="numeric"
+                    value="0"
+                >
+                <span>دقائق</span>
+            </div>
+
+        </div>
+
+
+        <div class="buttons">
+
+            <button id="confirmBtn" class="confirm">
+                تأكيد
+            </button>
+
+            <button id="resetBtn" class="reset">
+                تصحيح
+            </button>
+
+            <button id="cancelBtn" class="cancel">
+                إلغاء
+            </button>
+
+        </div>
+
+
+        <div class="status">
+
+            <p>
+                الحالة:
+                <strong id="ledStatus">متوقف</strong>
+            </p>
+
+            <p id="remaining">
+                لا يوجد مؤقت
+            </p>
+
+        </div>
+
+    </main>
+
+    <script type="module" src="script.js"></script>
+
+</body>
+</html>

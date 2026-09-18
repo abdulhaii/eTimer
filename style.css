@@ -1,0 +1,88 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f2f2f2;
+    color: #222;
+}
+
+.container {
+    width: min(450px, 92%);
+    margin: 40px auto;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.timer-box {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.1);
+}
+
+.input-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.input-row input {
+    width: 120px;
+    height: 50px;
+    font-size: 24px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+}
+
+.input-row span {
+    font-size: 20px;
+}
+
+.buttons {
+    display: grid;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+button {
+    border: 0;
+    padding: 15px;
+    border-radius: 10px;
+    font-size: 19px;
+    cursor: pointer;
+}
+
+.confirm {
+    background: #198754;
+    color: white;
+}
+
+.reset {
+    background: #ffc107;
+    color: black;
+}
+
+.cancel {
+    background: #dc3545;
+    color: white;
+}
+
+.status {
+    margin-top: 20px;
+    padding: 15px;
+    background: white;
+    border-radius: 12px;
+    text-align: center;
+}
+
+#ledStatus {
+    color: #dc3545;
+}
